@@ -26,13 +26,7 @@ def get_roi_config():
     if os.path.exists(CONFIG_FILE):
         try:
             with open(CONFIG_FILE, "r") as f:
-                data = json.load(f)['roi']
-                return {
-                    "top": data['y'],
-                    "left": data['x'],
-                    "width": data['width'],
-                    "height": data['height']
-                }
+                return json.load(f)
         except (json.JSONDecodeError, IOError, KeyError) as e:
             print(f"Error reading {CONFIG_FILE}: {e}")
             return None
@@ -110,21 +104,11 @@ def select_screen_and_roi():
             "top": selected_monitor['top'] + y,
             "left": selected_monitor['left'] + x,
             "width": w,
-            "height": h
+            "height": h,
+            "mon": monitor_number + 1
         }
 
-        config_to_save = {
-            # mss uses 1-based indexing for monitors, but 0 is the full screen
-            "monitor": monitor_number + 1,
-            "roi": {
-                "x": roi_abs['left'],
-                "y": roi_abs['top'],
-                "width": w,
-                "height": h
-            }
-        }
-
-        save_config(config_to_save)
+        save_config(roi_abs)
         print(f"Configuration saved to {CONFIG_FILE}")
 
         return roi_abs

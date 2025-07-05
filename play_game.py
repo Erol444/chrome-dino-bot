@@ -19,7 +19,7 @@ label_annotator = sv.LabelAnnotator(color=palette)
 
 keyboard = Controller()
 
-keyboard_img = np.ones((64 * 2 + 20, 624, 3), dtype=np.uint8) * 255
+keyboard_img = None
 
 key_release_queue = {}
 
@@ -67,6 +67,8 @@ while True:
             key_release_queue[Key.down] = time.time() + 0.4
 
     # Draw UI indicators (arrow keys)
+    if keyboard_img is None:
+        keyboard_img = np.ones((64 * 2 + 20, image.shape[1], 3), dtype=np.uint8) * 255
     keyboard_img = draw_key_indicators(keyboard_img, key_release_queue.keys())
 
     # display the image
